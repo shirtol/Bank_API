@@ -1,5 +1,5 @@
 import express from "express";
-import { getUserData, getAllUsers } from "../utils.js";
+import { getUserData, getAllUsers, addNewUser } from "../utils.js";
 
 export const route = express.Router();
 
@@ -21,6 +21,17 @@ route.get("/users/:id", (req, res) => {
         res.status(200).json(userData);
     } catch (err) {
         console.error(err.message);
+        res.status(404).send(err.message);
+    }
+});
+
+route.post("/users", (req, res) => {
+    try {
+        const { id } = req.body;
+        console.log(id);
+        addNewUser(id);
+        res.status(200).json(getAllUsers());
+    } catch (err) {
         res.status(400).send(err.message);
     }
 });
