@@ -1,12 +1,17 @@
 import express from "express";
+import { getUserData } from "../utils.js";
 
 export const route = express.Router();
 
-route.get("/users", (req, res) => {
+route.get("/users/:id", (req, res) => {
     try {
-        console.log(req.body);
-        res.status(200).send(req.body.id);
+        const { id } = req.params;
+        console.log(typeof id);
+        const userData = getUserData(id);
+        console.log(userData);
+        res.status(200).json(userData);
     } catch (err) {
-        res.status(400).send(e.message);
+        console.error(err.message);
+        res.status(400).json(err.message);
     }
 });
