@@ -1,7 +1,16 @@
 import express from "express";
-import { getUserData } from "../utils.js";
+import { getUserData, getAllUsers } from "../utils.js";
 
 export const route = express.Router();
+
+route.get("/users", (req, res) => {
+    try {
+        const allUsers = getAllUsers();
+        res.status(200).json(allUsers);
+    } catch (err) {
+        res.status(400).send(err.message);
+    }
+});
 
 route.get("/users/:id", (req, res) => {
     try {
@@ -12,6 +21,6 @@ route.get("/users/:id", (req, res) => {
         res.status(200).json(userData);
     } catch (err) {
         console.error(err.message);
-        res.status(400).json(err.message);
+        res.status(400).send(err.message);
     }
 });
