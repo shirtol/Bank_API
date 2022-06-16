@@ -35,3 +35,8 @@ export const getUserData = (id) => {
         return userData;
     }
 };
+
+export const getAllUsers = () => {
+    const users = loadJson("users.json");
+    return users.map((user) => getUserData(user.id));
+};
