@@ -2,7 +2,7 @@ import fs from "fs";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { v4 as uuid } from "uuid";
-import { WITHDRAW_TYPE_CASH } from "./consts.js";
+import { UPDATE_TYPE_CREDIT, UPDATE_TYPE_CASH } from "./consts.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -86,7 +86,7 @@ const getAccountFromUser = (requestedAccountId, user) => {
 const updateAccountsAfterActivity = (
     accountId,
     amountOfMoney,
-    fromWhere = WITHDRAW_TYPE_CASH
+    fromWhere = UPDATE_TYPE_CASH
 ) => {
     const accounts = loadJson("accounts.json");
     const newAccountsArr = accounts.map((account) => {
@@ -137,6 +137,19 @@ export const withdrawMoney = (
         id,
         amount * -1,
         fromWhereToWithdraw
+    );
+    saveToJson("accounts.json", newAccountsArr);
+};
+
+export const updateCredit = ({ userId, accountId, amount }) => {
+    if (amount < 0) {
+        throw Error("Can't update credit with negative amount");
+    }
+    const { id } = getRequestedAccount(userId, accountId);
+    const newAccountsArr = updateAccountsAfterActivity(
+        id,
+        amount,
+        UPDATE_TYPE_CREDIT
     );
     saveToJson("accounts.json", newAccountsArr);
 };
