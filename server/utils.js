@@ -68,7 +68,7 @@ export const addNewUser = (newUserId) => {
     }
 };
 
-const getAccount = (accountId) => {
+export const getAccount = (accountId) => {
     const accounts = loadJson("accounts.json");
     return accounts.find((account) => account.id === accountId);
 };
@@ -86,9 +86,10 @@ const getAccountFromUser = (requestedAccountId, user) => {
 const updateAccountsAfterActivity = (
     accountId,
     amountOfMoney,
-    fromWhere = UPDATE_TYPE_CASH
+    fromWhere = UPDATE_TYPE_CASH,
+    accountsArr
 ) => {
-    const accounts = loadJson("accounts.json");
+    const accounts = accountsArr ?? loadJson("accounts.json");
     const newAccountsArr = accounts.map((account) => {
         if (account.id === accountId) {
             account[fromWhere] += amountOfMoney;
@@ -129,8 +130,10 @@ export const withdrawMoney = (
 ) => {
     const { id } = getRequestedAccount(userId, accountId);
     const moneyAmount = getMoneyAmount(id, fromWhereToWithdraw);
-    if (moneyAmount - amount <= 0) {
-        throw Error("Can't withdraw money");
+    if (moneyAmount - amount < 0) {
+        throw Error(
+            "Can't withdraw money (The user can't getting into overdraft)"
+        );
     }
 
     const newAccountsArr = updateAccountsAfterActivity(
@@ -152,4 +155,36 @@ export const updateCredit = ({ userId, accountId, amount }) => {
         UPDATE_TYPE_CREDIT
     );
     saveToJson("accounts.json", newAccountsArr);
+};
+
+export const transferMoney = (
+    { userId, withdrawAccountId, depositAccountId, amount },
+    whereToUpdate
+) => {
+    if (amount < 0) {
+        throw Error("Can't transfer negative amount");
+    }
+    const withdrawAccount = getRequestedAccount(userId, withdrawAccountId);
+    const totalMoneyToWithdrawFrom = getMoneyAmount(
+        withdrawAccount.id,
+        whereToUpdate
+    );
+    if (totalMoneyToWithdrawFrom - amount < 0) {
+        throw Error(
+            "Can't transfer money (The user can't getting into overdraft)"
+        );
+    }
+    const depositAccount = getAccount(depositAccountId);
+    const updatedAccountsAfterWithdraw = updateAccountsAfterActivity(
+        withdrawAccount.id,
+        amount * -1,
+        whereToUpdate
+    );
+    const updatedAccountsAfterTransfer = updateAccountsAfterActivity(
+        depositAccount.id,
+        amount,
+        UPDATE_TYPE_CASH,
+        updatedAccountsAfterWithdraw
+    );
+    saveToJson("accounts.json", updatedAccountsAfterTransfer);
 };

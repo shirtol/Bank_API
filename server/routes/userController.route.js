@@ -7,6 +7,8 @@ import {
     depositCash,
     withdrawMoney,
     updateCredit,
+    transferMoney,
+    getAccount,
 } from "../utils.js";
 
 export const route = express.Router();
@@ -75,6 +77,32 @@ route.put("/users/credit/update", (req, res) => {
     try {
         updateCredit(req.body);
         res.status(200).json(getUserData(req.body.userId));
+    } catch (err) {
+        res.status(400).send(err.message);
+    }
+});
+
+route.put("/users/credit/transfer", (req, res) => {
+    try {
+        transferMoney(req.body, UPDATE_TYPE_CREDIT);
+        res.status(200).json({
+            ...getAccount(req.body.withdrawAccountId),
+            ...getAccount(req.body.depositAccountId),
+        });
+        res.status(200).json(getUserData(req.body.userId));
+    } catch (err) {
+        console.log(err);
+        res.status(400).send(err.message);
+    }
+});
+
+route.put("/users/cash/transfer", (req, res) => {
+    try {
+        transferMoney(req.body, UPDATE_TYPE_CASH);
+        res.status(200).json({
+            ...getAccount(req.body.withdrawAccountId),
+            ...getAccount(req.body.depositAccountId),
+        });
     } catch (err) {
         res.status(400).send(err.message);
     }
