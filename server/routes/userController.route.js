@@ -36,9 +36,27 @@ route.post("/users", (req, res) => {
     }
 });
 
-route.put("/users", (req, res) => {
+route.put("/users/cash/deposit", (req, res) => {
     try {
         depositCash(req.body);
+        res.status(200).json(getUserData(req.body.userId));
+    } catch (err) {
+        res.status(404).send(err.message);
+    }
+});
+
+route.put("/users/cash/withdraw", (req, res) => {
+    try {
+        withdrawMoney(req.body);
+        res.status(200).json(getUserData(req.body.userId));
+    } catch (err) {
+        res.status(404).send(err.message);
+    }
+});
+
+route.put("/users/credit/withdraw", (req, res) => {
+    try {
+        withdrawMoney(req.body);
         res.status(200).json(getUserData(req.body.userId));
     } catch (err) {
         res.status(404).send(err.message);

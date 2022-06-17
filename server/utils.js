@@ -75,11 +75,20 @@ const getAccount = (accountId) => {
 const getAccountFromUser = (accountId, user) =>
     user.accounts.find((account) => account.id === accountId);
 
-const updateAccountsAfterDeposit = (accountId, amountOfCashToDeposit) => {
+const updateAccountsAfterActivity = (
+    accountId,
+    amountOfMoney,
+    activity,
+    fromWhere = "cash"
+) => {
     const accounts = loadJson("accounts.json");
     const newAccountsArr = accounts.map((account) => {
         if (account.id === accountId) {
-            account.cash += amountOfCashToDeposit;
+            if (activity === "deposit") {
+                account[fromWhere] += amountOfMoney;
+            } else if (activity === "withdraw") {
+                account[fromWhere] -= amountOfMoney;
+            }
         }
         return account;
     });
@@ -101,16 +110,42 @@ export const depositCash = ({ userId, accountId, cashToDeposit }) => {
     if (!requestedAccount) {
         throw Error("This account doesn't exist");
     } else {
-        const newAccountsArr = updateAccountsAfterDeposit(
+        const newAccountsArr = updateAccountsAfterActivity(
             accountId,
-            cashToDeposit
+            cashToDeposit,
+            "deposit"
         );
         saveToJson("accounts.json", newAccountsArr);
     }
 };
 
-export const withdrawMoney = (userId, accountId, amountOfMoneyToWithdraw) => {
-    const user = getUserData(userId);
-    const accountFromAllAccounts = getAccount(accountId);
-    const requestedAccount = getAccountFromUser(accountId, user);
+const getMoneyAmount = (accountId, fromWhereToWithdraw) => {
+    const accounts = loadJson("accounts.json");
+    const accountData = accounts.find((account) => account.id === accountId);
+    return accountData[fromWhereToWithdraw];
+};
+
+export const withdrawMoney = ({
+    userId,
+    accountId,
+    amountOfMoneyToWithdraw,
+    fromWhereToWithdraw,
+}) => {
+    const requestedAccount = getRequestedAccount(userId, accountId);
+    if (!requestedAccount) {
+        throw Error("This account doesn't exist");
+    } else {
+        const moneyAmount = getMoneyAmount(accountId, fromWhereToWithdraw);
+        if (moneyAmount - amountOfMoneyToWithdraw <= 0) {
+            throw Error("Can't withdraw money");
+        } else {
+            const newAccountsArr = updateAccountsAfterActivity(
+                accountId,
+                amountOfMoneyToWithdraw,
+                "withdraw",
+                fromWhereToWithdraw
+            );
+            saveToJson("accounts.json", newAccountsArr);
+        }
+    }
 };
