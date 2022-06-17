@@ -1,5 +1,11 @@
 import express from "express";
-import { getUserData, getAllUsers, addNewUser, depositCash } from "../utils.js";
+import {
+    getUserData,
+    getAllUsers,
+    addNewUser,
+    depositCash,
+    withdrawMoney,
+} from "../utils.js";
 
 export const route = express.Router();
 

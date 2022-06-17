@@ -78,17 +78,12 @@ const getAccountFromUser = (accountId, user) =>
 const updateAccountsAfterActivity = (
     accountId,
     amountOfMoney,
-    activity,
     fromWhere = "cash"
 ) => {
     const accounts = loadJson("accounts.json");
     const newAccountsArr = accounts.map((account) => {
         if (account.id === accountId) {
-            if (activity === "deposit") {
-                account[fromWhere] += amountOfMoney;
-            } else if (activity === "withdraw") {
-                account[fromWhere] -= amountOfMoney;
-            }
+            account[fromWhere] += amountOfMoney;
         }
         return account;
     });
@@ -112,8 +107,7 @@ export const depositCash = ({ userId, accountId, cashToDeposit }) => {
     } else {
         const newAccountsArr = updateAccountsAfterActivity(
             accountId,
-            cashToDeposit,
-            "deposit"
+            cashToDeposit
         );
         saveToJson("accounts.json", newAccountsArr);
     }
@@ -141,8 +135,7 @@ export const withdrawMoney = ({
         } else {
             const newAccountsArr = updateAccountsAfterActivity(
                 accountId,
-                amountOfMoneyToWithdraw,
-                "withdraw",
+                amountOfMoneyToWithdraw * -1,
                 fromWhereToWithdraw
             );
             saveToJson("accounts.json", newAccountsArr);
