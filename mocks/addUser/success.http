@@ -1,0 +1,5 @@
+POST /users HTTP/1.1
+Host: localhost:5000
+Content-Type: application/json
+
+{"id": "2114c44a6262d7438551bdbbc1aeb543d64f9e2503c90ca0c21409cc437c4536"}

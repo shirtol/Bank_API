@@ -1,5 +1,4 @@
 export const amountValidation = (req, res, next) => {
-    console.log("hii");
     const amount = req?.body?.amount;
     if (amount) {
         if (typeof amount !== "number") {
