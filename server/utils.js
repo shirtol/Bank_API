@@ -70,7 +70,14 @@ export const addNewUser = (newUserId) => {
 
 export const getAccount = (accountId) => {
     const accounts = loadJson("accounts.json");
-    return accounts.find((account) => account.id === accountId);
+    const accountFromAllAccounts = accounts.find(
+        (account) => account.id === accountId
+    );
+    if (!accountFromAllAccounts) {
+        throw Error("This account doesn't exist");
+    } else {
+        return accountFromAllAccounts;
+    }
 };
 
 const getAccountFromUser = (requestedAccountId, user) => {
@@ -104,16 +111,12 @@ const updateAccountsAfterActivity = (
 const getRequestedAccount = (userId, accountId) => {
     const accountFromAllAccounts = getAccount(accountId);
     const user = getUserData(userId);
-    if (!accountFromAllAccounts) {
-        throw Error("This account doesn't exist");
-    } else {
-        return getAccountFromUser(accountId, user);
-    }
+    return getAccountFromUser(accountFromAllAccounts.id, user);
 };
 
-export const depositCash = ({ userId, accountId, cashToDeposit }) => {
+export const depositCash = ({ userId, accountId, amount }) => {
     const { id } = getRequestedAccount(userId, accountId);
-    const newAccountsArr = updateAccountsAfterActivity(id, cashToDeposit);
+    const newAccountsArr = updateAccountsAfterActivity(id, amount);
     saveToJson("accounts.json", newAccountsArr);
 };
 
