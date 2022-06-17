@@ -6,7 +6,8 @@
     "type": "module",
     "scripts": {
         "dev": "nodemon app.js",
-        "debug-server": "nodemon --inspect server/app.js"
+        "debug-server": "nodemon --inspect server/app.js",
+        "start": "node server/app.js"
     },
     "repository": {
         "type": "git",
