@@ -2,12 +2,12 @@ import fs from "fs";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { v4 as uuid } from "uuid";
+import { WITHDRAW_TYPE_CASH } from "./consts.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const loadJson = (jsonLocation) => {
     try {
-        console.log(__dirname);
         const dataBuffer = fs.readFileSync(`${__dirname}/${jsonLocation}`);
         const dataJson = dataBuffer.toString();
         const data = JSON.parse(dataJson);
@@ -73,31 +73,70 @@ const getAccount = (accountId) => {
     return accounts.find((account) => account.id === accountId);
 };
 
-const getAccountFromUser = (accountId, user) =>
-    user.accounts.find((account) => account.id === accountId);
+const getAccountFromUser = (requestedAccountId, user) => {
+    const accountId = user.accounts.find(
+        (account) => account.id === requestedAccountId
+    );
+    if (!accountId) {
+        throw Error("This account doesn't exist");
+    }
+    return accountId;
+};
 
-const updateAccountsAfterDeposit = (accountId, amountOfCashToDeposit) => {
+const updateAccountsAfterActivity = (
+    accountId,
+    amountOfMoney,
+    fromWhere = WITHDRAW_TYPE_CASH
+) => {
     const accounts = loadJson("accounts.json");
     const newAccountsArr = accounts.map((account) => {
         if (account.id === accountId) {
-            account.cash += amountOfCashToDeposit;
+            account[fromWhere] += amountOfMoney;
         }
+
         return account;
     });
+
     return newAccountsArr;
 };
 
-export const depositCash = (userId, accountId, amountOfCashToDeposit) => {
+const getRequestedAccount = (userId, accountId) => {
     const accountFromAllAccounts = getAccount(accountId);
     const user = getUserData(userId);
-    const requestedAccount = getAccountFromUser(accountId, user);
-    if (!requestedAccount || !accountFromAllAccounts) {
+    if (!accountFromAllAccounts) {
         throw Error("This account doesn't exist");
     } else {
-        const newAccountsArr = updateAccountsAfterDeposit(
-            accountId,
-            amountOfCashToDeposit
-        );
-        saveToJson("accounts.json", newAccountsArr);
+        return getAccountFromUser(accountId, user);
     }
+};
+
+export const depositCash = ({ userId, accountId, cashToDeposit }) => {
+    const { id } = getRequestedAccount(userId, accountId);
+    const newAccountsArr = updateAccountsAfterActivity(id, cashToDeposit);
+    saveToJson("accounts.json", newAccountsArr);
+};
+
+const getMoneyAmount = (accountId, fromWhereToWithdraw) => {
+    const accounts = loadJson("accounts.json");
+    const accountData = accounts.find((account) => account.id === accountId);
+
+    return accountData[fromWhereToWithdraw];
+};
+
+export const withdrawMoney = (
+    { userId, accountId, amount },
+    fromWhereToWithdraw
+) => {
+    const { id } = getRequestedAccount(userId, accountId);
+    const moneyAmount = getMoneyAmount(id, fromWhereToWithdraw);
+    if (moneyAmount - amount <= 0) {
+        throw Error("Can't withdraw money");
+    }
+
+    const newAccountsArr = updateAccountsAfterActivity(
+        id,
+        amount * -1,
+        fromWhereToWithdraw
+    );
+    saveToJson("accounts.json", newAccountsArr);
 };

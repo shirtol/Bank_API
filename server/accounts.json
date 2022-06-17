@@ -1,8 +1,8 @@
 [
     {
         "id": "c595d8bb-9e6d-476f-a438-fc6926e1c242",
-        "cash": 0,
-        "credit": 0,
+        "cash": 22000,
+        "credit": 900,
         "permittedUsers": [
             "2114c44a6262d7438551bdbbc1aeb543d64f9e2503c90ca0c21409cc437c20c5",
             "2224c44a6262d7438551bdbbc1aeb543d64f9e2503c90ca0c21409cc437c20c5"
@@ -26,7 +26,7 @@
     },
     {
         "id": "023bacfa-67d4-4451-bbf6-ea23cdd92e3b",
-        "cash": 6000,
+        "cash": 90,
         "credit": 0,
         "permittedUsers": [
             "2114c44a6262d7438551bdbbc1aeb543d64f9e2503c90ca0c21409cc437c1111"

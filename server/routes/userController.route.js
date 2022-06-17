@@ -1,5 +1,12 @@
 import express from "express";
-import { getUserData, getAllUsers, addNewUser, depositCash } from "../utils.js";
+import { WITHDRAW_TYPE_CASH, WITHDRAW_TYPE_CREDIT } from "../consts.js";
+import {
+    getUserData,
+    getAllUsers,
+    addNewUser,
+    depositCash,
+    withdrawMoney,
+} from "../utils.js";
 
 export const route = express.Router();
 
@@ -36,11 +43,28 @@ route.post("/users", (req, res) => {
     }
 });
 
-route.put("/users", (req, res) => {
+route.put("/users/cash/deposit", (req, res) => {
     try {
-        const { userId, accountId, cashToDeposit } = req.body;
-        depositCash(userId, accountId, cashToDeposit);
-        res.status(200).json(getUserData(userId));
+        depositCash(req.body);
+        res.status(200).json(getUserData(req.body.userId));
+    } catch (err) {
+        res.status(404).send(err.message);
+    }
+});
+
+route.put("/users/cash/withdraw", (req, res) => {
+    try {
+        withdrawMoney(req.body, WITHDRAW_TYPE_CASH);
+        res.status(200).json(getUserData(req.body.userId));
+    } catch (err) {
+        res.status(404).send(err.message);
+    }
+});
+
+route.put("/users/credit/withdraw", (req, res) => {
+    try {
+        withdrawMoney(req.body, WITHDRAW_TYPE_CREDIT);
+        res.status(200).json(getUserData(req.body.userId));
     } catch (err) {
         res.status(404).send(err.message);
     }
