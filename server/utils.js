@@ -67,3 +67,22 @@ export const addNewUser = (newUserId) => {
         throw Error("This user already exist");
     }
 };
+
+export const depositCash = (userId, accountId, amountOfCashToDeposit) => {
+    const accounts = loadJson("accounts.json");
+    const user = getUserData(userId);
+    const requestedAccount = user.accounts.find(
+        (account) => account.id === accountId
+    );
+    if (!requestedAccount) {
+        throw Error("This account doesn't exist");
+    } else {
+        const newAccountsArr = accounts.map((account) => {
+            if (account.id === accountId) {
+                account.cash += amountOfCashToDeposit;
+            }
+            return account;
+        });
+        saveToJson("accounts.json", newAccountsArr);
+    }
+};

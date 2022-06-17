@@ -1,5 +1,5 @@
 import express from "express";
-import { getUserData, getAllUsers, addNewUser } from "../utils.js";
+import { getUserData, getAllUsers, addNewUser, depositCash } from "../utils.js";
 
 export const route = express.Router();
 
@@ -33,5 +33,15 @@ route.post("/users", (req, res) => {
         res.status(200).json(getAllUsers());
     } catch (err) {
         res.status(400).send(err.message);
+    }
+});
+
+route.put("/users", (req, res) => {
+    try {
+        const { userId, accountId, cashToDeposit } = req.body;
+        depositCash(userId, accountId, cashToDeposit);
+        res.status(200).json(getUserData(userId));
+    } catch (err) {
+        res.status(404).send(err.message);
     }
 });
