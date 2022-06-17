@@ -38,9 +38,8 @@ route.post("/users", (req, res) => {
 
 route.put("/users", (req, res) => {
     try {
-        const { userId, accountId, cashToDeposit } = req.body;
-        depositCash(userId, accountId, cashToDeposit);
-        res.status(200).json(getUserData(userId));
+        depositCash(req.body);
+        res.status(200).json(getUserData(req.body.userId));
     } catch (err) {
         res.status(404).send(err.message);
     }

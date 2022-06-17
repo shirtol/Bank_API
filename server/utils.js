@@ -7,7 +7,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const loadJson = (jsonLocation) => {
     try {
-        console.log(__dirname);
         const dataBuffer = fs.readFileSync(`${__dirname}/${jsonLocation}`);
         const dataJson = dataBuffer.toString();
         const data = JSON.parse(dataJson);
@@ -87,17 +86,31 @@ const updateAccountsAfterDeposit = (accountId, amountOfCashToDeposit) => {
     return newAccountsArr;
 };
 
-export const depositCash = (userId, accountId, amountOfCashToDeposit) => {
+const getRequestedAccount = (userId, accountId) => {
     const accountFromAllAccounts = getAccount(accountId);
     const user = getUserData(userId);
-    const requestedAccount = getAccountFromUser(accountId, user);
-    if (!requestedAccount || !accountFromAllAccounts) {
+    if (!accountFromAllAccounts) {
+        throw Error("This account doesn't exist");
+    } else {
+        return getAccountFromUser(accountId, user);
+    }
+};
+
+export const depositCash = ({ userId, accountId, cashToDeposit }) => {
+    const requestedAccount = getRequestedAccount(userId, accountId);
+    if (!requestedAccount) {
         throw Error("This account doesn't exist");
     } else {
         const newAccountsArr = updateAccountsAfterDeposit(
             accountId,
-            amountOfCashToDeposit
+            cashToDeposit
         );
         saveToJson("accounts.json", newAccountsArr);
     }
+};
+
+export const withdrawMoney = (userId, accountId, amountOfMoneyToWithdraw) => {
+    const user = getUserData(userId);
+    const accountFromAllAccounts = getAccount(accountId);
+    const requestedAccount = getAccountFromUser(accountId, user);
 };
