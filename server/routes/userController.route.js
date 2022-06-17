@@ -85,11 +85,10 @@ route.put("/users/credit/update", (req, res) => {
 route.put("/users/credit/transfer", (req, res) => {
     try {
         transferMoney(req.body, UPDATE_TYPE_CREDIT);
-        res.status(200).json({
-            ...getAccount(req.body.withdrawAccountId),
-            ...getAccount(req.body.depositAccountId),
-        });
-        res.status(200).json(getUserData(req.body.userId));
+        res.status(200).json([
+            getAccount(req.body.withdrawAccountId),
+            getAccount(req.body.depositAccountId),
+        ]);
     } catch (err) {
         console.log(err);
         res.status(400).send(err.message);
@@ -99,10 +98,10 @@ route.put("/users/credit/transfer", (req, res) => {
 route.put("/users/cash/transfer", (req, res) => {
     try {
         transferMoney(req.body, UPDATE_TYPE_CASH);
-        res.status(200).json({
-            ...getAccount(req.body.withdrawAccountId),
-            ...getAccount(req.body.depositAccountId),
-        });
+        res.status(200).json([
+            getAccount(req.body.withdrawAccountId),
+            getAccount(req.body.depositAccountId),
+        ]);
     } catch (err) {
         res.status(400).send(err.message);
     }
