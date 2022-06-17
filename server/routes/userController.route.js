@@ -9,7 +9,7 @@ import {
     updateCredit,
     transferMoney,
     getAccount,
-} from "../utils.js";
+} from "../userController.js";
 
 export const route = express.Router();
 
@@ -22,15 +22,12 @@ route.get("/users", (req, res) => {
     }
 });
 
-route.get("/users/:id", (req, res) => {
+route.get("/user", (req, res) => {
     try {
-        const { id } = req.params;
-        console.log(typeof id);
-        const userData = getUserData(id);
-        console.log(userData);
+        const userId = req.headers["user-id"];
+        const userData = getUserData(userId);
         res.status(200).json(userData);
     } catch (err) {
-        console.error(err.message);
         res.status(404).send(err.message);
     }
 });
@@ -38,7 +35,6 @@ route.get("/users/:id", (req, res) => {
 route.post("/users", (req, res) => {
     try {
         const { id } = req.body;
-        console.log(id);
         addNewUser(id);
         res.status(200).json(getAllUsers());
     } catch (err) {
@@ -46,16 +42,17 @@ route.post("/users", (req, res) => {
     }
 });
 
-route.put("/users/cash/deposit", (req, res) => {
+route.put("/user/cash/deposit", (req, res) => {
     try {
-        depositCash(req.body);
-        res.status(200).json(getUserData(req.body.userId));
+        const userId = req.headers["user-id"];
+        depositCash(req.body, userId);
+        res.status(200).json(getUserData(userId));
     } catch (err) {
         res.status(404).send(err.message);
     }
 });
 
-route.put("/users/cash/withdraw", (req, res) => {
+route.put("/user/cash/withdraw", (req, res) => {
     try {
         withdrawMoney(req.body, UPDATE_TYPE_CASH);
         res.status(200).json(getUserData(req.body.userId));
@@ -64,7 +61,7 @@ route.put("/users/cash/withdraw", (req, res) => {
     }
 });
 
-route.put("/users/credit/withdraw", (req, res) => {
+route.put("/user/credit/withdraw", (req, res) => {
     try {
         withdrawMoney(req.body, UPDATE_TYPE_CREDIT);
         res.status(200).json(getUserData(req.body.userId));
@@ -73,16 +70,17 @@ route.put("/users/credit/withdraw", (req, res) => {
     }
 });
 
-route.put("/users/credit/update", (req, res) => {
+route.put("/user/credit/update", (req, res) => {
     try {
-        updateCredit(req.body);
-        res.status(200).json(getUserData(req.body.userId));
+        const userId = req.headers["user-id"];
+        updateCredit(req.body, userId);
+        res.status(200).json(getUserData(userId));
     } catch (err) {
         res.status(400).send(err.message);
     }
 });
 
-route.put("/users/credit/transfer", (req, res) => {
+route.put("/user/credit/transfer", (req, res) => {
     try {
         transferMoney(req.body, UPDATE_TYPE_CREDIT);
         res.status(200).json([
@@ -90,12 +88,11 @@ route.put("/users/credit/transfer", (req, res) => {
             getAccount(req.body.depositAccountId),
         ]);
     } catch (err) {
-        console.log(err);
         res.status(400).send(err.message);
     }
 });
 
-route.put("/users/cash/transfer", (req, res) => {
+route.put("/user/cash/transfer", (req, res) => {
     try {
         transferMoney(req.body, UPDATE_TYPE_CASH);
         res.status(200).json([

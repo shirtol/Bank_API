@@ -1,0 +1,11 @@
+{
+    "cSpell.words": ["middlewares"],
+    "rest-client.environmentVariables": {
+        "local": {
+            "host": "localhost:5000"
+        },
+        "production": {
+            "host": "shirtol-bank.herokuapp.com"
+        }
+    }
+}
