@@ -67,3 +67,37 @@ export const addNewUser = (newUserId) => {
         throw Error("This user already exist");
     }
 };
+
+const getAccount = (accountId) => {
+    const accounts = loadJson("accounts.json");
+    return accounts.find((account) => account.id === accountId);
+};
+
+const getAccountFromUser = (accountId, user) =>
+    user.accounts.find((account) => account.id === accountId);
+
+const updateAccountsAfterDeposit = (accountId, amountOfCashToDeposit) => {
+    const accounts = loadJson("accounts.json");
+    const newAccountsArr = accounts.map((account) => {
+        if (account.id === accountId) {
+            account.cash += amountOfCashToDeposit;
+        }
+        return account;
+    });
+    return newAccountsArr;
+};
+
+export const depositCash = (userId, accountId, amountOfCashToDeposit) => {
+    const accountFromAllAccounts = getAccount(accountId);
+    const user = getUserData(userId);
+    const requestedAccount = getAccountFromUser(accountId, user);
+    if (!requestedAccount || !accountFromAllAccounts) {
+        throw Error("This account doesn't exist");
+    } else {
+        const newAccountsArr = updateAccountsAfterDeposit(
+            accountId,
+            amountOfCashToDeposit
+        );
+        saveToJson("accounts.json", newAccountsArr);
+    }
+};
