@@ -34,9 +34,9 @@ route.get("/user", (req, res) => {
 
 route.post("/users", (req, res) => {
     try {
-        const { id } = req.body;
-        addNewUser(id);
-        res.status(200).json(getAllUsers());
+        const userId = req.headers["user-id"];
+        addNewUser(req.body, userId);
+        res.status(200).json(getUserData(userId));
     } catch (err) {
         res.status(400).send(err.message);
     }

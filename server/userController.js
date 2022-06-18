@@ -15,6 +15,7 @@ export const getUserData = (id) => {
     });
     const userData = {
         userId: requestedUser.id,
+        userName: requestedUser.name,
         accounts: userAccountsData,
     };
 
@@ -26,21 +27,21 @@ export const getAllUsers = () => {
     return users.map((user) => getUserData(user.id));
 };
 
-const createNewUser = (userNewAccount, newUserId) => ({
+const createNewAccount = (userNewAccount, newUserId) => ({
     id: userNewAccount,
     cash: 0,
     credit: 0,
     permittedUsers: [newUserId],
 });
 
-export const addNewUser = (newUserId) => {
+export const addNewUser = ({ name }, newUserId) => {
     const { users, accounts } = getUsersAndAccountsJson();
     const duplicateUser = users.find((user) => user.id === newUserId);
 
     if (!duplicateUser) {
         const userNewAccount = uuid();
-        users.push({ id: newUserId, accounts: [userNewAccount] });
-        accounts.push(createNewUser(userNewAccount, newUserId));
+        users.push({ id: newUserId, name: name, accounts: [userNewAccount] });
+        accounts.push(createNewAccount(userNewAccount, newUserId));
         saveToJson("users.json", users);
         saveToJson("accounts.json", accounts);
     } else {
