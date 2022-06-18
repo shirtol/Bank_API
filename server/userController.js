@@ -55,6 +55,7 @@ const updateAccounts = (
     fromWhere = UPDATE_TYPE_CASH,
     accountsArr
 ) => {
+    console.log(accountsArr);
     const accounts = accountsArr ?? loadJson("accounts.json");
     const newAccountsArr = accounts.map((account) => {
         if (account.id === accountId) {
@@ -91,7 +92,8 @@ const getMoneyAmount = (accountId, fromWhereToWithdraw) => {
 };
 
 export const withdrawMoney = (
-    { userId, accountId, amount },
+    { accountId, amount },
+    userId,
     fromWhereToWithdraw
 ) => {
     const { id } = getRequestedAccount(userId, accountId);
@@ -115,13 +117,22 @@ const checkUserBalanceAndThrow = (withdrawAccountId, whereToUpdate, amount) => {
     }
 };
 
+const checkAccountExistAndThrow = (accountId) => {
+    const account = getAccount(accountId);
+    if (!account) {
+        throw Error("Destination account doesn't exist");
+    }
+    return account;
+};
+
 export const transferMoney = (
-    { userId, withdrawAccountId, depositAccountId, amount },
+    { accountId, destinationAccountId, amount },
+    userId,
     whereToUpdate
 ) => {
-    const withdrawAccount = getRequestedAccount(userId, withdrawAccountId);
+    const depositAccount = checkAccountExistAndThrow(destinationAccountId);
+    const withdrawAccount = getRequestedAccount(userId, accountId);
     checkUserBalanceAndThrow(withdrawAccount.id, whereToUpdate, amount);
-    const depositAccount = getAccount(depositAccountId);
     //Withdraw
     let updatedAccounts = updateAccounts(
         withdrawAccount.id,
