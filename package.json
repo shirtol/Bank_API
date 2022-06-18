@@ -8,7 +8,7 @@
         "dev": "nodemon app.js",
         "debug-server": "nodemon --inspect server/app.js",
         "start": "node server/app.js",
-        "heroku-postbuild": "cd client && npm install && npm run build && cd .. && cd server && npm install"
+        "heroku-postbuild": "cd client && npm install --legacy-peer-deps && npm run build && cd .. && cd server && npm install"
     },
     "repository": {
         "type": "git",
