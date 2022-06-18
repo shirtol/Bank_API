@@ -3,13 +3,15 @@ import { getAllUsers } from "../../networkUtils/networkUtils";
 import { User } from "../../types/types";
 import Button from "../button/Button";
 
-const GetAllUsers = () => {
-    const [allUsers, setAllUsers] = useState<User[]>([]);
+interface GetAllUsersProps {
+    setResults: (res: string) => void;
+}
 
+const GetAllUsers = ({ setResults }: GetAllUsersProps) => {
     const fetchAllUsers = async () => {
         const allUsers = await getAllUsers();
         console.log(allUsers);
-        setAllUsers(allUsers);
+        setResults(JSON.stringify(allUsers));
     };
 
     return <Button onBtnClicked={fetchAllUsers} title="get all users"></Button>;
