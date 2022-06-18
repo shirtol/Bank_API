@@ -12,7 +12,7 @@ const GetAllUsers = () => {
         setAllUsers(allUsers);
     };
 
-    return <Button onBtnClicked={fetchAllUsers}></Button>;
+    return <Button onBtnClicked={fetchAllUsers} title="get all users"></Button>;
 };
 
 export default GetAllUsers;

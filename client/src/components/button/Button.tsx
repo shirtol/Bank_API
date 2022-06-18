@@ -4,9 +4,10 @@ import { User } from "../../types/types";
 
 interface ButtonProps {
     onBtnClicked: () => void;
+    title: string;
 }
-const Button = ({ onBtnClicked }: ButtonProps) => {
-    return <button onClick={onBtnClicked}>Button</button>;
+const Button = ({ onBtnClicked, title }: ButtonProps) => {
+    return <button onClick={onBtnClicked}>{title}</button>;
 };
 
 export default Button;
