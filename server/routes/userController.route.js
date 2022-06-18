@@ -54,8 +54,9 @@ route.put("/user/cash/deposit", (req, res) => {
 
 route.put("/user/cash/withdraw", (req, res) => {
     try {
-        withdrawMoney(req.body, UPDATE_TYPE_CASH);
-        res.status(200).json(getUserData(req.body.userId));
+        const userId = req.headers["user-id"];
+        withdrawMoney(req.body, userId, UPDATE_TYPE_CASH);
+        res.status(200).json(getUserData(userId));
     } catch (err) {
         res.status(400).send(err.message);
     }
@@ -63,8 +64,9 @@ route.put("/user/cash/withdraw", (req, res) => {
 
 route.put("/user/credit/withdraw", (req, res) => {
     try {
-        withdrawMoney(req.body, UPDATE_TYPE_CREDIT);
-        res.status(200).json(getUserData(req.body.userId));
+        const userId = req.headers["user-id"];
+        withdrawMoney(req.body, userId, UPDATE_TYPE_CREDIT);
+        res.status(200).json(getUserData(userId));
     } catch (err) {
         res.status(400).send(err.message);
     }
@@ -82,10 +84,11 @@ route.put("/user/credit/update", (req, res) => {
 
 route.put("/user/credit/transfer", (req, res) => {
     try {
-        transferMoney(req.body, UPDATE_TYPE_CREDIT);
+        const userId = req.headers["user-id"];
+        transferMoney(req.body, userId, UPDATE_TYPE_CREDIT);
         res.status(200).json([
-            getAccount(req.body.withdrawAccountId),
-            getAccount(req.body.depositAccountId),
+            getAccount(req.body.accountId),
+            getAccount(req.body.destinationAccountId),
         ]);
     } catch (err) {
         res.status(400).send(err.message);
@@ -94,10 +97,11 @@ route.put("/user/credit/transfer", (req, res) => {
 
 route.put("/user/cash/transfer", (req, res) => {
     try {
-        transferMoney(req.body, UPDATE_TYPE_CASH);
+        const userId = req.headers["user-id"];
+        transferMoney(req.body, userId, UPDATE_TYPE_CASH);
         res.status(200).json([
-            getAccount(req.body.withdrawAccountId),
-            getAccount(req.body.depositAccountId),
+            getAccount(req.body.accountId),
+            getAccount(req.body.destinationAccountId),
         ]);
     } catch (err) {
         res.status(400).send(err.message);
