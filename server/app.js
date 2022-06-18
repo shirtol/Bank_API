@@ -1,6 +1,4 @@
 import express from "express";
-import { v4 as uuid } from "uuid";
-import crypto from "crypto";
 import { route as usersRoute } from "./routes/userController.route.js";
 import { route as accountsRoute } from "./routes/accountController.route.js";
 import { amountValidation } from "./middlewares/amountValidationMiddlewares.js";
@@ -9,6 +7,7 @@ import { accountExistValidation } from "./middlewares/accountExistValidationMidd
 import * as path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
+import { accountActiveValidation } from "./middlewares/accountActiveValidationMiddleware.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -21,6 +20,7 @@ app.use(cors());
 app.use(express.static(path.resolve(__dirname, "../client/build")));
 app.use("/user", userExistValidation);
 app.use(["/user/cash", "/user/credit"], accountExistValidation);
+app.use(["/user/cash", "/user/credit"], accountActiveValidation);
 app.use(["/user/cash", "/user/credit"], amountValidation);
 
 app.use((err, req, res, next) => {

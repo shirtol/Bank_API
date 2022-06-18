@@ -8,5 +8,6 @@ export interface Account {
     id: string;
     cash: number;
     credit: number;
+    isActive: boolean;
     permittedUsers: string[];
 }
