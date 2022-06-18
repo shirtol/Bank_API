@@ -31,4 +31,4 @@ To see the full documentation follow the link below.
 
 ### Documentation
 
-[Bank API Documentation](https://github.com/shirtol/Bank_API/wiki/users)
+[Bank API Documentation](https://github.com/shirtol/Bank_API/wiki)
