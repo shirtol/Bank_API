@@ -4,14 +4,14 @@ import { User } from "../../types/types";
 import Button from "../button/Button";
 
 interface GetAllUsersProps {
-    setResults: (res: string) => void;
+    setResults: (res: object) => void;
 }
 
 const GetAllUsers = ({ setResults }: GetAllUsersProps) => {
     const fetchAllUsers = async () => {
         const allUsers = await getAllUsers();
         console.log(allUsers);
-        setResults(JSON.stringify(allUsers));
+        setResults(allUsers);
     };
 
     return <Button onBtnClicked={fetchAllUsers} title="get all users"></Button>;
