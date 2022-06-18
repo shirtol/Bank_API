@@ -1,5 +1,6 @@
 import { loadJson } from "./jsonUtils.js";
 import { getUserData } from "./userController.js";
+import { UPDATE_TYPE_CASH } from "./consts.js";
 
 export const getAccount = (accountId) => {
     const accounts = loadJson("accounts.json");
