@@ -59,5 +59,10 @@
         "id": "4444c44a6262d7438551bdbbc1aeb543d64f9e2503c90ca0c21409cc437c9997",
         "name": "Shlomo Sixt",
         "accounts": ["d1a88396-81ae-4512-9d9a-b678efe781f8"]
+    },
+    {
+        "id": "4444c44a6262d7438551bdbbc1aeb543d64f9e2503c90ca0c21409cc437c5111",
+        "name": "Shlomit Israeli",
+        "accounts": ["ad4166a4-a2c0-4722-9c63-2282708b4435"]
     }
 ]

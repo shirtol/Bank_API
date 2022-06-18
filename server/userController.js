@@ -31,6 +31,7 @@ const createNewAccount = (userNewAccount, newUserId) => ({
     id: userNewAccount,
     cash: 0,
     credit: 0,
+    isActive: true,
     permittedUsers: [newUserId],
 });
 
@@ -39,9 +40,9 @@ export const addNewUser = ({ name }, newUserId) => {
     const duplicateUser = users.find((user) => user.id === newUserId);
 
     if (!duplicateUser) {
-        const userNewAccount = uuid();
-        users.push({ id: newUserId, name: name, accounts: [userNewAccount] });
-        accounts.push(createNewAccount(userNewAccount, newUserId));
+        const userNewAccountId = uuid();
+        users.push({ id: newUserId, name: name, accounts: [userNewAccountId] });
+        accounts.push(createNewAccount(userNewAccountId, newUserId));
         saveToJson("users.json", users);
         saveToJson("accounts.json", accounts);
     } else {
@@ -51,7 +52,6 @@ export const addNewUser = ({ name }, newUserId) => {
 
 export const depositCash = ({ accountId, amount }, userId) => {
     const { id } = getRequestedAccount(userId, accountId);
-    console.log(id);
     const newAccountsArr = updateAccounts(id, amount);
     saveToJson("accounts.json", newAccountsArr);
 };

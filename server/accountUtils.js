@@ -14,7 +14,6 @@ export const updateAccounts = (
     fromWhere = UPDATE_TYPE_CASH,
     accountsArr
 ) => {
-    console.log(accountsArr);
     const accounts = accountsArr ?? loadJson("accounts.json");
     const newAccountsArr = accounts.map((account) => {
         if (account.id === accountId) {

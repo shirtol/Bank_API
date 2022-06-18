@@ -1,0 +1,10 @@
+PUT /user/cash/deposit HTTP/1.1
+Host: {{host}}
+Content-Type: application/json
+user-id: 2114c44a6262d7438551bdbbc1aeb543d64f9e2503c90ca0c21409cc437c20c5
+
+
+{ 
+"accountId": "c595d8bb-9e6d-476f-a438-fc6926e1c242", 
+"amount": 200
+}
