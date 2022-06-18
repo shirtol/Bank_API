@@ -35,7 +35,7 @@ export const getRequestedAccount = (userId, accountId) => {
     );
 };
 
-export const checkAccountExistAndThrow = (accountId) => {
+export const checkAccountExistOrThrow = (accountId) => {
     const account = getAccount(accountId);
     if (!account) {
         throw Error("Destination account doesn't exist");

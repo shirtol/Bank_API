@@ -4,7 +4,7 @@ import { loadJson, getUsersAndAccountsJson, saveToJson } from "./jsonUtils.js";
 import {
     updateAccounts,
     getRequestedAccount,
-    checkAccountExistAndThrow,
+    checkAccountExistOrThrow,
 } from "./accountUtils.js";
 
 export const getUserData = (id) => {
@@ -68,7 +68,7 @@ export const withdrawMoney = (
     fromWhereToWithdraw
 ) => {
     const { id } = getRequestedAccount(userId, accountId);
-    checkUserBalanceAndThrow(id, fromWhereToWithdraw, amount);
+    checkUserBalanceOrThrow(id, fromWhereToWithdraw, amount);
     const newAccountsArr = updateAccounts(id, amount * -1, fromWhereToWithdraw);
     saveToJson("accounts.json", newAccountsArr);
 };
@@ -79,7 +79,7 @@ export const updateCredit = ({ accountId, amount }, userId) => {
     saveToJson("accounts.json", newAccountsArr);
 };
 
-const checkUserBalanceAndThrow = (withdrawAccountId, whereToUpdate, amount) => {
+const checkUserBalanceOrThrow = (withdrawAccountId, whereToUpdate, amount) => {
     const totalMoney = getMoneyAmount(withdrawAccountId, whereToUpdate);
     if (totalMoney - amount < 0) {
         throw Error(
@@ -93,9 +93,9 @@ export const transferMoney = (
     userId,
     whereToUpdate
 ) => {
-    const depositAccount = checkAccountExistAndThrow(destinationAccountId);
+    const depositAccount = checkAccountExistOrThrow(destinationAccountId);
     const withdrawAccount = getRequestedAccount(userId, accountId);
-    checkUserBalanceAndThrow(withdrawAccount.id, whereToUpdate, amount);
+    checkUserBalanceOrThrow(withdrawAccount.id, whereToUpdate, amount);
     //Withdraw
     let updatedAccounts = updateAccounts(
         withdrawAccount.id,
