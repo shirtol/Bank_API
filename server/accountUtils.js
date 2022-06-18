@@ -1,9 +1,9 @@
-import { loadJson } from "./jsonUtils.js";
+import { getUsersAndAccountsJson, loadJson, saveToJson } from "./jsonUtils.js";
 import { getUserData } from "./userController.js";
 import { UPDATE_TYPE_CASH } from "./consts.js";
 
 export const getAccount = (accountId) => {
-    const accounts = loadJson("accounts.json");
+    const { accounts } = getUsersAndAccountsJson();
 
     return accounts.find((account) => account.id === accountId);
 };
@@ -41,4 +41,21 @@ export const checkAccountExistOrThrow = (accountId) => {
         throw Error("Destination account doesn't exist");
     }
     return account;
+};
+
+export const updateAccountIsActive = ({ accountId, isActive }) => {
+    const { accounts } = getUsersAndAccountsJson();
+    console.log(isActive);
+    let selectedAccount = undefined;
+    const newAccountsArr = accounts.map((account) => {
+        if (account.id === accountId) {
+            account.isActive = isActive;
+            selectedAccount = account;
+        }
+
+        return account;
+    });
+    saveToJson("accounts.json", newAccountsArr);
+
+    return selectedAccount;
 };

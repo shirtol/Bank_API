@@ -18,8 +18,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.static(path.resolve(__dirname, "../client/build")));
-app.use("/user", userExistValidation);
-app.use(["/user/cash", "/user/credit"], accountExistValidation);
+app.use(["/user", "/account/is-active"], userExistValidation);
+app.use(
+    ["/user/cash", "/user/credit", "/account/is-active"],
+    accountExistValidation
+);
 app.use(["/user/cash", "/user/credit"], accountActiveValidation);
 app.use(["/user/cash", "/user/credit"], amountValidation);
 
