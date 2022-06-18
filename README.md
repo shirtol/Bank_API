@@ -21,7 +21,7 @@ To see the full documentation follow the link below.
 
 ## Main Technologies:
 
--   Express
+-   Node.js
 -   TS
 -   JS
 -   React

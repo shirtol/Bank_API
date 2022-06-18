@@ -9,7 +9,7 @@ const Bank = () => {
     const [currResult, setCurrResult] = useState({});
 
     return (
-        <StyledFlexWrapper childWidth="50%">
+        <StyledFlexWrapper childWidth="50%" marginTop="2rem">
             <StyledFlexWrapper flexDirection="column">
                 <GetAllUsers setResults={setCurrResult}></GetAllUsers>
                 <GetUser setResults={setCurrResult}></GetUser>

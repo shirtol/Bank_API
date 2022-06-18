@@ -1,13 +1,11 @@
-import React, { useState } from "react";
-import { getAllUsers } from "../../networkUtils/networkUtils";
-import { User } from "../../types/types";
+import { StyledButton } from "./StyledButton";
 
 interface ButtonProps {
     onBtnClicked: () => void;
     title: string;
 }
 const Button = ({ onBtnClicked, title }: ButtonProps) => {
-    return <button onClick={onBtnClicked}>{title}</button>;
+    return <StyledButton onClick={onBtnClicked}>{title}</StyledButton>;
 };
 
 export default Button;

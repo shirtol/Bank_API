@@ -5,6 +5,7 @@ interface StyledFlexWrapperProps {
     childWidth?: string;
     justifyContent?: string;
     overflowY?: string;
+    marginTop?: string;
 }
 
 export const StyledFlexWrapper = styled.div<StyledFlexWrapperProps>`
@@ -15,6 +16,7 @@ export const StyledFlexWrapper = styled.div<StyledFlexWrapperProps>`
     width: 100%;
     height: 100vh;
     overflow-y: ${(props) => props.overflowY ?? "visible"};
+    margin-top: ${(props) => props.marginTop ?? "0"};
     & > * {
         width: ${(props) => props.childWidth ?? "max-content"};
     }
