@@ -1,4 +1,4 @@
-import { getRequestedAccount } from "../userController.js";
+import { getRequestedAccount } from "../accountUtils.js";
 
 export const accountExistValidation = (req, res, next) => {
     const userId = req.headers["user-id"];

@@ -1,0 +1,9 @@
+GET /account/filter/cash HTTP/1.1
+Host: {{host}}
+Content-Type: application/json
+
+
+{ 
+"threshold": 700, 
+"isAbove": true
+}
