@@ -8,6 +8,7 @@ import { userExistValidation } from "./middlewares/userExistValidationMiddleware
 import { accountExistValidation } from "./middlewares/accountExistValidationMiddleware.js";
 import * as path from "path";
 import { fileURLToPath } from "url";
+import cors from "cors";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -16,6 +17,7 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 app.use(express.static(path.resolve(__dirname, "../client/build")));
 app.use("/user", userExistValidation);
 app.use(["/user/cash", "/user/credit"], accountExistValidation);
