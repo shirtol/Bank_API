@@ -8,8 +8,8 @@ import {
     withdrawMoney,
     updateCredit,
     transferMoney,
-    getAccount,
 } from "../userController.js";
+import { getAccount } from "../accountUtils.js";
 
 export const route = express.Router();
 

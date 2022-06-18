@@ -1,6 +1,11 @@
 import { v4 as uuid } from "uuid";
 import { UPDATE_TYPE_CREDIT, UPDATE_TYPE_CASH } from "./consts.js";
 import { loadJson, getUsersAndAccountsJson, saveToJson } from "./jsonUtils.js";
+import {
+    updateAccounts,
+    getRequestedAccount,
+    checkAccountExistAndThrow,
+} from "./accountUtils.js";
 
 export const getUserData = (id) => {
     const { users, accounts } = getUsersAndAccountsJson();
@@ -43,40 +48,6 @@ export const addNewUser = (newUserId) => {
     }
 };
 
-export const getAccount = (accountId) => {
-    const accounts = loadJson("accounts.json");
-
-    return accounts.find((account) => account.id === accountId);
-};
-
-const updateAccounts = (
-    accountId,
-    amountOfMoney,
-    fromWhere = UPDATE_TYPE_CASH,
-    accountsArr
-) => {
-    console.log(accountsArr);
-    const accounts = accountsArr ?? loadJson("accounts.json");
-    const newAccountsArr = accounts.map((account) => {
-        if (account.id === accountId) {
-            account[fromWhere] += amountOfMoney;
-        }
-
-        return account;
-    });
-
-    return newAccountsArr;
-};
-
-export const getRequestedAccount = (userId, accountId) => {
-    const accountFromAllAccounts = getAccount(accountId);
-    const user = getUserData(userId);
-
-    return user.accounts.find(
-        (account) => account.id === accountFromAllAccounts?.id
-    );
-};
-
 export const depositCash = ({ accountId, amount }, userId) => {
     const { id } = getRequestedAccount(userId, accountId);
     console.log(id);
@@ -115,14 +86,6 @@ const checkUserBalanceAndThrow = (withdrawAccountId, whereToUpdate, amount) => {
             "Can't transfer money (The user can't getting into overdraft)"
         );
     }
-};
-
-const checkAccountExistAndThrow = (accountId) => {
-    const account = getAccount(accountId);
-    if (!account) {
-        throw Error("Destination account doesn't exist");
-    }
-    return account;
 };
 
 export const transferMoney = (
